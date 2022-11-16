@@ -35,3 +35,13 @@ bin/
 *.iml
 *.log
 pom.xml.versionsBackup
+
+env.sh
+secrets.sh
+*.swp
+*test*.sh
+
+/mnt/
+/az-drun
+/urlencode.sh
+

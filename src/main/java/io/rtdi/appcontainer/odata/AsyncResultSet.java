@@ -27,6 +27,7 @@ public abstract class AsyncResultSet {
 	protected String url;
 	protected List<ODataRecord> rows = Collections.synchronizedList(new ArrayList<>());
 	protected ODataSchema table;
+	protected final ODataIdentifier identifier;
 	protected int limit;
 	protected boolean readcompleted = false;
 
@@ -53,6 +54,7 @@ public abstract class AsyncResultSet {
 		this.resultsetid = resultsetid;
 		this.url = service.getURL();
 		this.limit = limit;
+		this.identifier = identifier;
 		this.table = service.getMetadata(conn, identifier);
 	}
 
@@ -125,7 +127,7 @@ public abstract class AsyncResultSet {
 			throw new SQLException("Fetch did not find the data in time");
 		}
 		// Yes, the data is available
-		ODataResultSet resultset = new ODataResultSet();
+		ODataResultSet resultset = new ODataResultSet(identifier);
 		for (int i = start; i < stop; i++) {
 			resultset.addRow(rows.get(i));
 		}
@@ -151,7 +153,7 @@ public abstract class AsyncResultSet {
 		return readcompleted;
 	}
 
-	public static String tokenToresultsetid(String token) {
+	public static String tokenToResultsetid(String token) {
 		return token.substring(0, token.length()-6);
 	}
 

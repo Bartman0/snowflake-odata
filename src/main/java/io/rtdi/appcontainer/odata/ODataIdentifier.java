@@ -1,9 +1,10 @@
 package io.rtdi.appcontainer.odata;
 
 public class ODataIdentifier {
-	public static final String ENTITYTPE = "ROW";
-	public static final String ENTITYSETNAME = "RS";
-	public static final String ENTITYNAME = "DBOBJECT";
+
+//	public final static String ENTITYTYPE="ROW";
+
+	private String namespace;
 	private String dbschema;
 	private String dbobjectname;
 	private String entitysetname;
@@ -13,18 +14,23 @@ public class ODataIdentifier {
 
 	public ODataIdentifier(String dbschema, String dbobjectname, String entityname, String entitysetname, String entitytype) {
 		super();
+		this.namespace = createNamespace(dbschema, dbobjectname);
 		this.dbschema = dbschema;
 		this.dbobjectname = dbobjectname;
 		this.entitysetname = entitysetname;
 		this.entityname = entityname;
 		this.entitytype = entitytype;
-		this.identifier = createIdentifier(dbschema, dbobjectname);
+		this.identifier = createSqlIdentifier(dbschema, dbobjectname);
 	}
 
 	public ODataIdentifier(String dbschema, String dbobjectname) {
-		this(dbschema, dbobjectname, ENTITYNAME, ENTITYSETNAME, ENTITYTPE);
+		this(dbschema, dbobjectname, dbobjectname, dbobjectname, createEntityType(dbschema, dbobjectname));
 	}
-	
+
+	public String getNamespace() {
+		return namespace;
+	}
+
 	public String getDBSchema() {
 		return dbschema;
 	}
@@ -64,8 +70,16 @@ public class ODataIdentifier {
 			return false;
 		}
 	}
-	
-	public static String createIdentifier(String dbschema, String dbobjectname) {
+
+	public static String createEntityType(String dbschema, String dbobjectname) {
+		return dbschema + "_" + dbobjectname;
+	}
+
+	public static String createNamespace(String dbschema, String dbobjectname) {
+		return dbschema + "." + dbobjectname;
+	}
+
+	public static String createSqlIdentifier(String dbschema, String dbobjectname) {
 		return '"' + dbschema + "\".\"" + dbobjectname + '"';
 	}
 }
